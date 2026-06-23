@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>每日英语口语练习</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f7;min-height:100vh;padding:0 0 2rem}
+.app{max-width:420px;margin:0 auto;background:#fff;min-height:100vh}
+
+.hdr{padding:1.25rem 1.25rem 0.9rem;border-bottom:1px solid #e8e8e8;background:#fff}
+.hdr-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.hdr-title{font-size:13px;color:#888;text-transform:uppercase;letter-spacing:.05em;font-weight:600}
+.hdr-badge{font-size:12px;background:#e8f4fd;color:#1a73e8;padding:3px 11px;border-radius:20px;font-weight:500}
+.hdr-sub{font-size:13px;color:#aaa}
+.hdr-sub .hi{color:#f5a623;font-weight:600}
+.hdr-sub .bl{color:#1a73e8;font-weight:500}
+
+.pb-wrap{padding:0.75rem 1.25rem 0}
+.pb-row{display:flex;gap:6px;margin-bottom:5px}
+.pb-seg{flex:1;height:4px;border-radius:2px;background:#e8e8e8;transition:background .3s}
+.pb-seg.done{background:#34a853}
+.pb-seg.active{background:#1a73e8}
+.pb-labels{display:flex;justify-content:space-between;font-size:11px;color:#bbb}
+
+.scene-tag{margin:0.9rem 1.25rem 0;display:inline-flex;align-items:center;gap:6px;font-size:12px;color:#666;background:#f5f5f7;border:1px solid #e8e8e8;border-radius:20px;padding:5px 13px}
+
+.s-card{margin:0.75rem 1.25rem 0;background:#fff;border:1px solid #e8e8e8;border-radius:14px;padding:1.25rem}
+.s-num{font-size:11px;color:#bbb;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.5rem}
+.s-role{font-size:12px;color:#1a73e8;font-weight:600;margin-bottom:5px}
+.s-en{font-size:21px;font-weight:600;color:#1a1a1a;line-height:1.35;margin-bottom:5px}
+.s-ph{font-size:12px;color:#aaa;font-style:italic;margin-bottom:.5rem}
+.s-zh{font-size:13px;color:#666;margin-bottom:.9rem}
+.s-tip{font-size:12px;color:#666;background:#f8f9fa;border-radius:8px;padding:.65rem .8rem;line-height:1.55}
+.s-tip strong{color:#333;font-weight:600}
+
+.btn-listen{display:flex;align-items:center;justify-content:center;gap:8px;width:calc(100% - 2.5rem);margin:.75rem 1.25rem 0;padding:.7rem;background:#f8f9fa;border:1px solid #e0e0e0;border-radius:10px;cursor:pointer;font-size:14px;color:#333;font-weight:500;transition:background .15s}
+.btn-listen:hover{background:#f0f0f0}
+.btn-listen svg{color:#1a73e8}
+
+.rec-area{margin:.75rem 1.25rem 0}
+.btn-rec{width:100%;padding:.95rem;border-radius:14px;border:1px solid #e0e0e0;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;font-size:15px;font-weight:600;background:#fff;color:#1a1a1a;transition:all .15s;-webkit-tap-highlight-color:transparent}
+.btn-rec:hover{background:#f8f9fa}
+.btn-rec.on{background:#fff1f0;border-color:#ffcdd2;color:#d32f2f}
+.rec-hint{font-size:12px;color:#aaa;text-align:center;margin-top:7px;min-height:18px}
+.wave{display:flex;align-items:center;justify-content:center;gap:3px;height:44px;margin:4px 0}
+.wbar{width:4px;border-radius:2px;background:#1a73e8;height:8px;opacity:.2;transition:height .1s}
+.wbar.on{opacity:1}
+
+.res-card{margin:.75rem 1.25rem 0;background:#fff;border:1px solid #e8e8e8;border-radius:14px;padding:1.25rem;display:none}
+.res-card.show{display:block}
+.res-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.9rem;gap:12px}
+.res-heard{flex:1}
+.res-heard-lbl{font-size:11px;color:#bbb;text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px}
+.res-heard-txt{font-size:13px;color:#333;background:#f8f9fa;border-radius:8px;padding:.6rem .75rem;line-height:1.45}
+.score-box{text-align:right;flex-shrink:0}
+.score-box-lbl{font-size:11px;color:#bbb;margin-bottom:2px}
+.score-num{font-size:36px;font-weight:700;line-height:1}
+.score-num.pass{color:#34a853}
+.score-num.ok{color:#f5a623}
+.score-num.low{color:#ea4335}
+.score-sub{font-size:11px;color:#bbb}
+.bars{display:flex;flex-direction:column;gap:8px;margin-bottom:.9rem}
+.bar-row{display:flex;align-items:center;gap:8px}
+.bar-lbl{font-size:12px;color:#888;width:54px;flex-shrink:0}
+.bar-track{flex:1;height:5px;background:#f0f0f0;border-radius:3px;overflow:hidden}
+.bar-fill{height:100%;border-radius:3px;transition:width .55s ease}
+.bar-val{font-size:12px;font-weight:600;color:#333;width:30px;text-align:right}
+.fb{font-size:13px;line-height:1.55;padding:.7rem .8rem;border-radius:8px}
+.fb.pass-fb{background:#e8f5e9;color:#2e7d32}
+.fb.ok-fb{background:#fff8e1;color:#e65100}
+.fb.bad-fb{background:#ffebee;color:#c62828}
+
+.nav-row{display:flex;gap:8px;padding:.75rem 1.25rem 0}
+.nbtn{flex:1;padding:.75rem;border:1px solid #e0e0e0;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;background:#fff;color:#333;text-align:center;transition:background .15s}
+.nbtn:hover{background:#f5f5f5}
+.nbtn.pri{background:#1a1a1a;color:#fff;border-color:transparent}
+.nbtn.pri:hover{background:#333}
+
+.day-done{margin:.75rem 1.25rem 0;background:#e8f5e9;border-radius:14px;padding:1.5rem;text-align:center;display:none}
+.day-done.show{display:block}
+.trophy{font-size:40px;margin-bottom:.5rem;display:block}
+.day-done h3{font-size:18px;font-weight:700;color:#1b5e20;margin-bottom:.35rem}
+.day-done p{font-size:13px;color:#2e7d32}
+.day-done .retry-day{margin-top:1rem;padding:.65rem 1.5rem;background:#fff;border:1px solid #a5d6a7;border-radius:8px;color:#2e7d32;font-size:13px;font-weight:600;cursor:pointer}
+
+.hist-section{padding:1.25rem;border-top:1px solid #e8e8e8;margin-top:1.25rem}
+.hist-title{font-size:11px;color:#bbb;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.85rem}
+.hist-grid{display:flex;gap:6px;flex-wrap:wrap}
+.hist-dot{min-width:44px;height:36px;border-radius:8px;border:1px solid #e8e8e8;display:flex;align-items:center;justify-content:center;font-size:11px;color:#bbb;background:#fff;cursor:pointer;padding:0 6px}
+.hist-dot.done{background:#34a853;border-color:#2e7d32;color:#fff;font-weight:600}
+.hist-dot.today{border:2px solid #1a1a1a;color:#1a1a1a;font-weight:600}
+
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.no-sr{padding:1rem 1.25rem;background:#fff8e1;border-radius:10px;margin:.75rem 1.25rem;font-size:13px;color:#e65100;line-height:1.55;display:none}
+
+.api-setup{margin:.75rem 1.25rem 0;border:1px solid #e0e0e0;border-radius:12px;overflow:hidden}
+.api-setup-hdr{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1rem;background:#f8f9fa;cursor:pointer;user-select:none}
+.api-setup-hdr-left{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#333}
+.api-setup-hdr-right{font-size:11px;color:#aaa}
+.api-setup-body{padding:1rem;border-top:1px solid #e8e8e8;display:none}
+.api-setup-body.open{display:block}
+.api-label{font-size:12px;color:#666;margin-bottom:6px}
+.api-input-row{display:flex;gap:8px}
+.api-input-row input{flex:1;padding:.55rem .75rem;border:1px solid #e0e0e0;border-radius:8px;font-size:13px;color:#333;background:#fff;outline:none}
+.api-input-row input:focus{border-color:#1a73e8}
+.api-save-btn{padding:.55rem 1rem;background:#1a1a1a;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
+.api-save-btn:hover{background:#333}
+.api-note{font-size:11px;color:#aaa;margin-top:6px;line-height:1.5}
+.api-status{display:flex;align-items:center;gap:5px;font-size:12px;margin-top:0}
+.api-dot{width:7px;height:7px;border-radius:50%;background:#e0e0e0;flex-shrink:0}
+.api-dot.set{background:#34a853}
+.api-dot.loading{background:#f5a623;animation:pulse .8s infinite alternate}
+@keyframes pulse{from{opacity:.4}to{opacity:1}}
+
+.btn-listen.loading{opacity:.6;pointer-events:none}
+.voice-select{display:flex;gap:6px;margin-bottom:.75rem;flex-wrap:wrap}
+.voice-opt{padding:4px 12px;border:1px solid #e0e0e0;border-radius:20px;font-size:12px;color:#666;cursor:pointer;background:#fff}
+.voice-opt.active{background:#1a1a1a;color:#fff;border-color:#1a1a1a}
+</style>
+</head>
+<body>
+<div class="app">
+
+<div class="hdr">
+  <div class="hdr-row">
+    <span class="hdr-title">每日英语口语</span>
+    <span class="hdr-badge" id="dayBadge">第1天</span>
+  </div>
+  <div class="hdr-sub">连续 <span class="hi" id="streakDays">0</span> 天 &nbsp;·&nbsp; 今日 <span class="bl" id="todayProg">0/3</span> 句通过</div>
+</div>
+
+<div class="pb-wrap">
+  <div class="pb-row">
+    <div class="pb-seg" id="seg0"></div>
+    <div class="pb-seg" id="seg1"></div>
+    <div class="pb-seg" id="seg2"></div>
+  </div>
+  <div class="pb-labels"><span>第1句</span><span>第2句</span><span>第3句</span></div>
+</div>
+
+<div class="no-sr" id="noSR">
+  ⚠️ 你的浏览器不支持语音识别。请用 <strong>Chrome 浏览器</strong>打开此页面，并允许麦克风权限。
+</div>
+
+<!-- 首次使用设置弹窗 -->
+<div id="setupOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:16px;padding:1.5rem;width:340px;max-width:92vw;max-height:90vh;overflow-y:auto;">
+    <div style="font-size:16px;font-weight:700;color:#1a1a1a;margin-bottom:.25rem">⚙️ 初始设置</div>
+    <div style="font-size:12px;color:#aaa;margin-bottom:1.25rem">Key 仅保存在你的浏览器本地，不会上传任何地方</div>
+
+    <div style="font-size:12px;font-weight:600;color:#333;margin-bottom:.4rem">DeepSeek API Key <span style="color:#aaa;font-weight:400">（每日句子生成）</span></div>
+    <input id="inp_ds" type="password" placeholder="sk-xxxxxxxxxxxxxxxx" style="width:100%;padding:.6rem .75rem;border:1px solid #e0e0e0;border-radius:8px;font-size:13px;margin-bottom:1rem;outline:none"/>
+
+    <div style="font-size:12px;font-weight:600;color:#333;margin-bottom:.4rem">阿里云 AppKey <span style="color:#aaa;font-weight:400">（语音合成）</span></div>
+    <input id="inp_appkey" type="text" placeholder="y6d9xxxxxxxx" style="width:100%;padding:.6rem .75rem;border:1px solid #e0e0e0;border-radius:8px;font-size:13px;margin-bottom:.75rem;outline:none"/>
+
+    <div style="font-size:12px;font-weight:600;color:#333;margin-bottom:.4rem">阿里云 AccessKey ID</div>
+    <input id="inp_akid" type="text" placeholder="LTAI5txxxxxxxx" style="width:100%;padding:.6rem .75rem;border:1px solid #e0e0e0;border-radius:8px;font-size:13px;margin-bottom:.75rem;outline:none"/>
+
+    <div style="font-size:12px;font-weight:600;color:#333;margin-bottom:.4rem">阿里云 AccessKey Secret</div>
+    <input id="inp_aksecret" type="password" placeholder="xxxxxxxxxxxxxxxx" style="width:100%;padding:.6rem .75rem;border:1px solid #e0e0e0;border-radius:8px;font-size:13px;margin-bottom:1.25rem;outline:none"/>
+
+    <button onclick="saveSetup()" style="width:100%;padding:.8rem;background:#1a1a1a;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer">保存并开始练习</button>
+    <div style="font-size:11px;color:#bbb;text-align:center;margin-top:.75rem">不填也可以直接跳过，使用本地句库和系统发音</div>
+    <button onclick="skipSetup()" style="width:100%;padding:.6rem;background:none;border:none;color:#aaa;font-size:12px;cursor:pointer;margin-top:.25rem">跳过，稍后再设置</button>
+  </div>
+</div>
+
+<div class="api-setup" id="apiSetup">
+  <div class="api-setup-hdr" onclick="toggleApiPanel()">
+    <div class="api-setup-hdr-left">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+      API 设置
+    </div>
+    <div style="display:flex;align-items:center;gap:6px">
+      <div class="api-dot" id="apiDot"></div>
+      <span class="api-setup-hdr-right" id="apiStatusTxt">点击配置</span>
+    </div>
+  </div>
+  <div class="api-setup-body" id="apiBody">
+    <div style="font-size:12px;color:#666;margin-bottom:.75rem">选择音色</div>
+    <div class="voice-select" id="voiceSelect"></div>
+    <div style="border-top:1px solid #f0f0f0;margin-top:.75rem;padding-top:.75rem">
+      <button onclick="document.getElementById('setupOverlay').style.display='flex'" style="width:100%;padding:.6rem;background:#f5f5f7;border:1px solid #e0e0e0;border-radius:8px;font-size:13px;color:#333;cursor:pointer">重新配置 API Key</button>
+    </div>
+  </div>
+</div>
+
+<div class="scene-tag" id="sceneTag">
+  <span id="sceneLabel">加载场景中…</span>
+</div>
+
+<div class="s-card" id="sCard">
+  <div class="s-num" id="sNum">第 1 句 / 共 3 句</div>
+  <div class="s-role" id="sRole"></div>
+  <div class="s-en" id="sEn">…</div>
+  <div class="s-ph" id="sPh"></div>
+  <div class="s-zh" id="sZh"></div>
+  <div class="s-tip" id="sTip"></div>
+</div>
+
+<button class="btn-listen" id="listenBtn" onclick="speak()">
+  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:#1a73e8"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+  <span>听标准发音</span>
+</button>
+
+<div class="rec-area">
+  <button class="btn-rec" id="recBtn" onclick="toggleRec()">
+    <svg id="micIco" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4M8 23h8"/></svg>
+    <span id="recTxt">开始录音</span>
+  </button>
+  <div class="wave" id="wave"></div>
+  <div class="rec-hint" id="recHint">点击开始，再次点击停止</div>
+</div>
+
+<div class="res-card" id="resCard">
+  <div class="res-top">
+    <div class="res-heard">
+      <div class="res-heard-lbl">识别内容</div>
+      <div class="res-heard-txt" id="heardTxt">—</div>
+    </div>
+    <div class="score-box">
+      <div class="score-box-lbl">综合评分</div>
+      <div class="score-num" id="scoreNum">—</div>
+      <div class="score-sub">/ 100</div>
+    </div>
+  </div>
+  <div class="bars">
+    <div class="bar-row"><span class="bar-lbl">准确度</span><div class="bar-track"><div class="bar-fill" id="bAcc" style="width:0%"></div></div><span class="bar-val" id="vAcc">—</span></div>
+    <div class="bar-row"><span class="bar-lbl">完整度</span><div class="bar-track"><div class="bar-fill" id="bCmp" style="width:0%"></div></div><span class="bar-val" id="vCmp">—</span></div>
+    <div class="bar-row"><span class="bar-lbl">流利度</span><div class="bar-track"><div class="bar-fill" id="bFlu" style="width:0%"></div></div><span class="bar-val" id="vFlu">—</span></div>
+  </div>
+  <div class="fb" id="fbMsg"></div>
+</div>
+
+<div class="nav-row" id="navRow" style="display:none">
+  <button class="nbtn" onclick="retry()">再试一次</button>
+  <button class="nbtn pri" id="nextBtn" onclick="nextStep()">下一句 →</button>
+</div>
+
+<div class="day-done" id="dayDone">
+  <span class="trophy">🏆</span>
+  <h3>今日任务完成！</h3>
+  <p id="doneTxt">三句全部达到85分，打卡成功！</p>
+  <button class="retry-day" onclick="startNewDay()">明天再来 / 换一组练习</button>
+</div>
+
+<div class="hist-section">
+  <div class="hist-title">最近7天打卡</div>
+  <div class="hist-grid" id="histGrid"></div>
+</div>
+
+</div>
+
+<script>
+const POOL = [
+  {scene:"☕ 咖啡店点单",
+   lines:[
+    {role:"顾客",en:"Can I get a large latte, please?",zh:"请给我一杯大杯拿铁。",ph:"/kæn aɪ ɡet ə lɑːrdʒ ˈlɑːteɪ pliːz/",tip:"「Can I get」是点单万能句，比 I want 更礼貌。「latte」重音在前：LAH-tay。"},
+    {role:"店员",en:"Sure! Would you like that hot or iced?",zh:"好的！您要热的还是冰的？",ph:"/ʃʊr wʊd juː laɪk ðæt hɒt ɔːr aɪst/",tip:"「Would you like」礼貌询问，语调上扬。「iced」的 d 要发清楚。"},
+    {role:"顾客",en:"Iced, please. And could I get the wifi password?",zh:"冰的谢谢。另外能告诉我wifi密码吗？",ph:"/aɪst pliːz ænd kʊd aɪ ɡet ðə waɪfaɪ ˈpæswɜːrd/",tip:"两个请求用 and 连起来很自然。「could I get」比 give me 更礼貌。"}
+   ]},
+  {scene:"🗺️ 问路与指路",
+   lines:[
+    {role:"问路者",en:"Excuse me, is there a pharmacy nearby?",zh:"打扰一下，附近有药店吗？",ph:"/ɪkˈskjuːz miː ɪz ðer ə ˈfɑːrməsi ˈnɪrbɪ/",tip:"「Excuse me」是打断陌生人的礼貌用法。「pharmacy」重音在第一音节。"},
+    {role:"路人",en:"Yes, go straight and turn left at the traffic light.",zh:"有，直走然后在红绿灯处左转。",ph:"/jes ɡoʊ streɪt ænd tɜːrn left æt ðə ˈtræfɪk laɪt/",tip:"指路句型：go straight → turn left/right → 地标。每个动作稍微停顿。"},
+    {role:"问路者",en:"Got it, thank you so much!",zh:"明白了，非常感谢！",ph:"/ɡɒt ɪt θæŋk juː soʊ mʌtʃ/",tip:"「Got it」口语中表示「我明白了」，比 I understand 更自然。语气要真诚。"}
+   ]},
+  {scene:"💬 同事闲聊",
+   lines:[
+    {role:"同事A",en:"Hey, did you watch the game last night?",zh:"嘿，你昨晚看球了吗？",ph:"/heɪ dɪd juː wɒtʃ ðə ɡeɪm lɑːst naɪt/",tip:"「did you」快读成 \"didja\"，非常自然的口语连读。"},
+    {role:"同事B",en:"I missed it. Who won?",zh:"我没看。谁赢了？",ph:"/aɪ mɪst ɪt huː wʌn/",tip:"「missed it」连读：\"miss-dit\"。短句要干净利落，不要拖长。"},
+    {role:"同事A",en:"It was so close! Down to the last second.",zh:"超级悬！一直到最后一秒。",ph:"/ɪt wəz soʊ kloʊs daʊn tə ðə lɑːst ˈsekənd/",tip:"「Down to the last second」是固定表达。说的时候要有兴奋感，语速稍快。"}
+   ]},
+  {scene:"🍽️ 餐厅用餐",
+   lines:[
+    {role:"顾客",en:"Could we get a table for two?",zh:"请问有两人的桌子吗？",ph:"/kʊd wiː ɡet ə ˈteɪbl fər tuː/",tip:"「Could we」比 Can we 更礼貌。「table for two」是固定搭配。"},
+    {role:"服务员",en:"Of course! Right this way, please.",zh:"当然！请往这边走。",ph:"/əv kɔːrs raɪt ðɪs weɪ pliːz/",tip:"「Right this way」是领位的标准用语。「Of course」比 Sure 语气更周到。"},
+    {role:"顾客",en:"What do you recommend today?",zh:"你们今天有什么推荐的吗？",ph:"/wɒt duː juː ˌrekəˈmend təˈdeɪ/",tip:"「recommend」重音在第三音节：rec-om-MEND。询问推荐菜的万能句。"}
+   ]},
+  {scene:"✈️ 机场办理登机",
+   lines:[
+    {role:"旅客",en:"I'm checking in for the flight to Tokyo.",zh:"我要办理去东京的登机手续。",ph:"/aɪm ˈtʃekɪŋ ɪn fər ðə flaɪt tə ˈtoʊkioʊ/",tip:"「checking in」是办理登机的固定说法。目的地用 for the flight to + 城市名。"},
+    {role:"地勤",en:"Can I see your passport and booking confirmation?",zh:"能出示您的护照和预订确认单吗？",ph:"/kæn aɪ siː jʊər ˈpɑːspɔːrt ænd ˈbʊkɪŋ ˌkɒnfərˈmeɪʃən/",tip:"「booking confirmation」重音在 con-fir-MA-tion。「Can I see your…」是礼貌问法。"},
+    {role:"旅客",en:"Here you go. Do I have a window seat?",zh:"给您。我是靠窗的座位吗？",ph:"/hɪər juː ɡoʊ duː aɪ hæv ə ˈwɪndoʊ siːt/",tip:"「Here you go」递东西时说，语气随意自然。「window seat」靠窗，对面是 aisle seat。"}
+   ]},
+  {scene:"🏥 医院挂号",
+   lines:[
+    {role:"患者",en:"I'd like to make an appointment, please.",zh:"我想预约挂号。",ph:"/aɪd laɪk tə meɪk ən əˈpɔɪntmənt pliːz/",tip:"「I'd like to」比 I want to 温和得多。「appointment」重音第二音节：a-POINT-ment。"},
+    {role:"前台",en:"What seems to be the problem?",zh:"请问您哪里不舒服？",ph:"/wɒt siːmz tə biː ðə ˈprɒbləm/",tip:"医疗常用开场，比 What's wrong with you 委婉。语调平稳，带关切感。"},
+    {role:"患者",en:"I've had a sore throat for two days.",zh:"我嗓子疼了两天了。",ph:"/aɪv hæd ə sɔːr θroʊt fər tuː deɪz/",tip:"「I've had」现在完成时表示已持续一段时间。「sore throat」注意 th 的发音。"}
+   ]},
+  {scene:"🎉 朋友聚会",
+   lines:[
+    {role:"主人",en:"I'm so glad you could make it!",zh:"你能来太好了！",ph:"/aɪm soʊ ɡlæd juː kʊd meɪk ɪt/",tip:"「make it」表示「赶到/出席」。语气要热情，可以适当拉长 so。"},
+    {role:"客人",en:"Thanks for having me. The place looks amazing!",zh:"谢谢你邀请我。你家布置得太漂亮了！",ph:"/θæŋks fər ˈhævɪŋ miː ðə pleɪs lʊks əˈmeɪzɪŋ/",tip:"「Thanks for having me」是到别人家时的礼貌用语，固定表达。"},
+    {role:"主人",en:"Help yourself to some drinks over there.",zh:"那边有饮料，你随便拿。",ph:"/help jɔːrˈself tə sʌm drɪŋks ˈoʊvər ðer/",tip:"「Help yourself」表示「请自便」，是非常常用的主人用语。"}
+   ]},
+  {scene:"💼 工作面试",
+   lines:[
+    {role:"面试官",en:"Tell me a little about yourself.",zh:"请简单介绍一下你自己。",ph:"/tel miː ə ˈlɪtl əˈbaʊt jɔːrˈself/",tip:"面试必问题。回答用 I am/have/enjoy 结构，控制在30-60秒，语速平稳。"},
+    {role:"求职者",en:"Sure! I have three years of experience in marketing.",zh:"好的！我有三年市场营销经验。",ph:"/ʃʊr aɪ hæv θriː jɪərz əv ɪkˈspɪriəns ɪn ˈmɑːrkɪtɪŋ/",tip:"「I have X years of experience in Y」是介绍背景的黄金句型。marketing 重音第一音节。"},
+    {role:"面试官",en:"What's your biggest strength?",zh:"你最大的优势是什么？",ph:"/wɒts jʊər ˈbɪɡɪst streŋθ/",tip:"「strength」ng+th 连发是难点，要一起发不要断开。提前准备一个具体例子。"}
+   ]},
+  {scene:"🛍️ 购物退换货",
+   lines:[
+    {role:"顾客",en:"I'd like to return this item, it's damaged.",zh:"我想退这件商品，它坏了。",ph:"/aɪd laɪk tə rɪˈtɜːrn ðɪs ˈaɪtəm ɪts ˈdæmɪdʒd/",tip:"「damaged」损坏，「defective」有缺陷，都可用于退货场景。语气要平稳。"},
+    {role:"客服",en:"I'm so sorry about that. Do you have your order number?",zh:"非常抱歉。请问您有订单号吗？",ph:"/aɪm soʊ ˈsɒri əˈbaʊt ðæt duː juː hæv jʊər ˈɔːrdər ˈnʌmbər/",tip:"道歉后立刻解决问题是专业做法。「I'm so sorry about that」比单说 sorry 更诚恳。"},
+    {role:"顾客",en:"Yes, it's 334-2871. Can I get a full refund?",zh:"有，是334-2871。我能全额退款吗？",ph:"/jes ɪts θriː θriː fɔːr tuː eɪt sevən wʌn kæn aɪ ɡet ə fʊl ˈriːfʌnd/",tip:"报数字时每位分开说。「full refund」全额退款。Can I get 比 I want 礼貌得多。"}
+   ]},
+  {scene:"🏋️ 健身房",
+   lines:[
+    {role:"会员A",en:"Is this machine taken?",zh:"这台机器有人用吗？",ph:"/ɪz ðɪs məˈʃiːn ˈteɪkən/",tip:"「Is this taken?」询问位置或器械是否有人，同样适用「这个座位有人吗？」"},
+    {role:"会员B",en:"No, go ahead. I just finished.",zh:"没有，你用吧。我刚用完。",ph:"/noʊ ɡoʊ əˈhed aɪ dʒʌst ˈfɪnɪʃt/",tip:"「Go ahead」表示「请便/你先来」，非常口语化。「just finished」的 just 要轻读。"},
+    {role:"会员A",en:"Thanks! Could you spot me on this lift?",zh:"谢了！这个动作你能帮我保护一下吗？",ph:"/θæŋks kʊd juː spɒt miː ɒn ðɪs lɪft/",tip:"「Spot me」是健身术语，请人在举重时保护。健身房非常常见的请求方式。"}
+   ]}
+];
+
+const PASS_FEEDBACKS = [
+  "发音清晰自然，连读和语调都很到位！",
+  "说得很地道！这句话你已经掌握了。",
+  "非常棒！节奏感和重音都很准确。",
+  "达标了！语调也很有感情，继续保持。",
+  "很好！听起来像母语使用者在说话了。"
+];
+const OK_FEEDBACKS = [
+  "不错，再练一遍就能到85分！注意连读部分。",
+  "整体可以，试着说得更流利一些。",
+  "内容基本正确，语速可以再自然一点。",
+  "发音还可以改进，先听几遍再跟着模仿。"
+];
+const BAD_FEEDBACKS = [
+  "先听几遍标准发音，跟着一起说，再来录音。",
+  "有些单词没说完整，试着把整句话完整说一遍。",
+  "语速可以慢一点，把每个单词说清楚再加速。",
+  "不要气馁！多听几遍，找到语调的感觉再录。"
+];
+function randOf(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+let todaySet=[], curIdx=0, passedArr=[false,false,false], dayKey='', dayDone=false, waveTimer=null, recognition=null, isRec=false;
+
+function getTodayKey(){ const d=new Date(); return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate(); }
+function getStreak(){ try{ return parseInt(localStorage.getItem('eng3_streak')||'0'); }catch(e){ return 0; } }
+
+async function load(){
+  dayKey = getTodayKey();
+  try{
+    const saved = localStorage.getItem('eng3_day_'+dayKey);
+    if(saved){
+      // 今天已有缓存，直接用
+      const p = JSON.parse(saved);
+      todaySet = p.set; passedArr = p.passed; curIdx = p.cur; dayDone = p.done||false;
+      render();
+    } else {
+      // 新的一天：先用本地句库渲染，后台同时请求 DeepSeek
+      pickSet(); passedArr=[false,false,false]; curIdx=0; dayDone=false;
+      showLoadingBanner(true);
+      render();
+      const ok = await fetchAISet();
+      showLoadingBanner(false);
+      if(ok){ render(); } // DeepSeek 成功则用新内容刷新
+    }
+  }catch(e){
+    pickSet(); passedArr=[false,false,false]; curIdx=0; dayDone=false;
+    showLoadingBanner(false);
+    render();
+  }
+}
+
+function showLoadingBanner(show){
+  let el = document.getElementById('geminiLoading');
+  if(!el){
+    el = document.createElement('div');
+    el.id = 'geminiLoading';
+    el.style.cssText = 'margin:.5rem 1.25rem 0;padding:.6rem 1rem;background:#e8f4fd;border-radius:8px;font-size:12px;color:#1a73e8;display:flex;align-items:center;gap:8px;';
+    el.innerHTML = '<span style="animation:spin 1s linear infinite;display:inline-block">⟳</span> DeepSeek AI 正在为你生成今日专属句子…';
+    const ref = document.getElementById('sceneTag');
+    if(ref) ref.parentNode.insertBefore(el, ref);
+  }
+  el.style.display = show ? 'flex' : 'none';
+}
+
+function getDeepSeekKey(){ return localStorage.getItem('cfg_deepseek_key')||''; }
+const SCENES = [
+  '咖啡店点单','问路与指路','同事闲聊','餐厅用餐','机场办理登机',
+  '医院挂号','朋友聚会','工作面试','购物退换货','健身房',
+  '超市购物','酒店入住','打车出行','银行办理','图书馆借书',
+  '邮局寄件','理发店','电影院买票','公园散步','网购客服'
+];
+
+function pickSet(){
+  const shuffled = [...POOL].sort(()=>Math.random()-.5);
+  todaySet = shuffled.slice(0,3);
+}
+
+async function fetchAISet(){
+  const shuffled = [...SCENES].sort(()=>Math.random()-.5);
+  const chosen = shuffled.slice(0,3);
+  const today = getTodayKey();
+
+  const prompt = `你是英语口语教学助手。为以下3个生活场景各生成一组3句连贯的英语对话，供中国学习者练习口语。
+
+场景：${chosen.join('、')}
+
+要求：
+1. 每场景3句连贯对话，有问有答，角色真实自然
+2. 句子8-15个单词，地道美式口语风格
+3. 每句提供：英文、中文翻译、国际音标、发音要点（针对中国学习者痛点，20字以内）
+4. 今天是 ${today}，请确保每次生成内容不同
+
+严格按以下JSON格式返回，不要包含任何其他文字或markdown代码块：
+[
+  {
+    "scene": "场景名（含合适emoji）",
+    "lines": [
+      {"role":"角色名","en":"英文句子","zh":"中文翻译","ph":"/音标/","tip":"发音要点"},
+      {"role":"角色名","en":"英文句子","zh":"中文翻译","ph":"/音标/","tip":"发音要点"},
+      {"role":"角色名","en":"英文句子","zh":"中文翻译","ph":"/音标/","tip":"发音要点"}
+    ]
+  },
+  { "scene":"...","lines":[...] },
+  { "scene":"...","lines":[...] }
+]`;
+
+  try{
+    const resp = await fetch('https://api.deepseek.com/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + getDeepSeekKey()
+      },
+      body: JSON.stringify({
+        model: 'deepseek-chat',
+        messages: [
+          { role: 'system', content: '你是专业的英语口语教学助手，只返回JSON格式数据，不加任何解释或代码块标记。' },
+          { role: 'user', content: prompt }
+        ],
+        temperature: 0.9,
+        max_tokens: 2048
+      })
+    });
+    if(!resp.ok){
+      const err = await resp.json().catch(()=>({}));
+      throw new Error(err.error?.message || 'HTTP '+resp.status);
+    }
+    const data = await resp.json();
+    const raw = data.choices?.[0]?.message?.content || '';
+    const jsonStr = raw.replace(/```json|```/g,'').trim();
+    const parsed = JSON.parse(jsonStr);
+    if(Array.isArray(parsed) && parsed.length===3 && parsed[0].lines?.length===3){
+      todaySet = parsed;
+      save();
+      return true;
+    }
+    throw new Error('格式不符');
+  }catch(e){
+    console.warn('DeepSeek生成失败，使用本地句库：', e.message);
+    return false;
+  }
+}
+
+function save(){
+  try{ localStorage.setItem('eng3_day_'+dayKey, JSON.stringify({set:todaySet,passed:passedArr,cur:curIdx,done:dayDone})); }catch(e){}
+}
+
+function bumpStreak(){
+  try{
+    const lastDone = localStorage.getItem('eng3_lastDone')||'';
+    const today = getTodayKey();
+    if(lastDone===today) return;
+    const yd = new Date(); yd.setDate(yd.getDate()-1);
+    const yKey = yd.getFullYear()+'-'+(yd.getMonth()+1)+'-'+yd.getDate();
+    const cur = getStreak();
+    const newVal = (lastDone===yKey) ? cur+1 : 1;
+    localStorage.setItem('eng3_streak', newVal);
+    localStorage.setItem('eng3_lastDone', today);
+  }catch(e){}
+}
+
+function render(){
+  const streak = getStreak();
+  document.getElementById('dayBadge').textContent = '第'+(streak||1)+'天';
+  document.getElementById('streakDays').textContent = streak;
+  const passCount = passedArr.filter(Boolean).length;
+  document.getElementById('todayProg').textContent = passCount+'/3';
+  ['seg0','seg1','seg2'].forEach((id,i)=>{
+    const el = document.getElementById(id);
+    el.className = 'pb-seg' + (passedArr[i]?' done':(i===curIdx&&!dayDone)?' active':'');
+  });
+  if(dayDone){
+    document.getElementById('dayDone').classList.add('show');
+    document.getElementById('sCard').style.display='none';
+    document.getElementById('listenBtn').style.display='none';
+    document.getElementById('rec-area-wrap') && (document.getElementById('rec-area-wrap').style.display='none');
+    document.querySelector('.rec-area').style.display='none';
+  } else {
+    document.getElementById('dayDone').classList.remove('show');
+    document.getElementById('sCard').style.display='';
+    document.getElementById('listenBtn').style.display='';
+    document.querySelector('.rec-area').style.display='';
+    renderSentence();
+  }
+  renderHistory();
+}
+
+function renderSentence(){
+  if(curIdx>=3) return;
+  const scene = todaySet[curIdx];
+  const line = scene.lines[curIdx];
+  document.getElementById('sceneLabel').textContent = scene.scene;
+  document.getElementById('sNum').textContent = '第 '+(curIdx+1)+' 句 / 共 3 句';
+  document.getElementById('sRole').textContent = line.role ? '— '+line.role+' 说' : '';
+  document.getElementById('sEn').textContent = line.en;
+  document.getElementById('sPh').textContent = line.ph;
+  document.getElementById('sZh').textContent = line.zh;
+  document.getElementById('sTip').innerHTML = '<strong>发音要点：</strong>'+line.tip;
+  document.getElementById('resCard').classList.remove('show');
+  document.getElementById('navRow').style.display='none';
+  document.getElementById('recHint').textContent='点击开始录音，再次点击停止';
+  document.getElementById('wave').innerHTML='';
+}
+
+function renderHistory(){
+  const grid = document.getElementById('histGrid'); grid.innerHTML='';
+  for(let i=6;i>=0;i--){
+    const d=new Date(); d.setDate(d.getDate()-i);
+    const k=d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
+    const label=(i===0)?'今天':(d.getMonth()+1)+'/'+(d.getDate());
+    const dot=document.createElement('div');
+    let cls='hist-dot';
+    if(i===0) cls+=' today';
+    try{ const s=localStorage.getItem('eng3_day_'+k); if(s&&JSON.parse(s).done) cls+=' done'; }catch(e){}
+    dot.className=cls; dot.textContent=label;
+    grid.appendChild(dot);
+  }
+}
+
+// ── 阿里云 TTS（Key 从 localStorage 读取，不硬编码）──
+function getAliKeys(){
+  return {
+    appkey: localStorage.getItem('cfg_ali_appkey')||'',
+    akId:   localStorage.getItem('cfg_ali_akid')||'',
+    akSecret: localStorage.getItem('cfg_ali_aksecret')||''
+  };
+}
+
+// 阿里云支持的英语音色
+const VOICES = {
+  'Luca':   '男声 · 美式',
+  'Stella': '女声 · 美式',
+  'Luna':   '女声 · 温柔',
+  'Harry':  '男声 · 成熟',
+};
+let selectedVoiceName = 'Stella';
+let audioCache = {};
+
+function loadApiKey(){
+  // 检查是否已设置过 Key
+  const hasDs = !!localStorage.getItem('cfg_deepseek_key');
+  const hasAli = !!localStorage.getItem('cfg_ali_appkey');
+  const skipped = !!localStorage.getItem('cfg_skipped');
+  // 首次使用且未跳过，弹出设置面板
+  if(!hasDs && !hasAli && !skipped){
+    setTimeout(()=>{ document.getElementById('setupOverlay').style.display='flex'; }, 800);
+  }
+  updateApiStatus();
+  try{
+    const v = localStorage.getItem('eng3_voice');
+    if(v && VOICES[v]) selectedVoiceName = v;
+  }catch(e){}
+  renderVoiceButtons();
+}
+function saveSetup(){
+  const ds = document.getElementById('inp_ds').value.trim();
+  const appkey = document.getElementById('inp_appkey').value.trim();
+  const akid = document.getElementById('inp_akid').value.trim();
+  const aksecret = document.getElementById('inp_aksecret').value.trim();
+  if(ds) localStorage.setItem('cfg_deepseek_key', ds);
+  if(appkey) localStorage.setItem('cfg_ali_appkey', appkey);
+  if(akid) localStorage.setItem('cfg_ali_akid', akid);
+  if(aksecret) localStorage.setItem('cfg_ali_aksecret', aksecret);
+  localStorage.removeItem('cfg_skipped');
+  document.getElementById('setupOverlay').style.display='none';
+  updateApiStatus();
+  audioCache = {};
+  // 如果 DeepSeek Key 刚设好，重新生成今日句子
+  if(ds){ pickSet(); passedArr=[false,false,false]; curIdx=0; dayDone=false;
+    showLoadingBanner(true); render();
+    fetchAISet().then(ok=>{ showLoadingBanner(false); if(ok) render(); });
+  }
+}
+function skipSetup(){
+  localStorage.setItem('cfg_skipped','1');
+  document.getElementById('setupOverlay').style.display='none';
+}
+function saveApiKey(){ document.getElementById('apiBody').classList.remove('open'); }
+function toggleApiPanel(){
+  document.getElementById('apiBody').classList.toggle('open');
+}
+function updateApiStatus(){
+  const dot = document.getElementById('apiDot');
+  const txt = document.getElementById('apiStatusTxt');
+  const hasDs = !!localStorage.getItem('cfg_deepseek_key');
+  const hasAli = !!localStorage.getItem('cfg_ali_appkey');
+  if(hasDs && hasAli){ dot.className='api-dot set'; txt.textContent='已配置'; }
+  else if(hasDs||hasAli){ dot.className='api-dot'; dot.style.background='#f5a623'; txt.textContent='部分配置'; }
+  else{ dot.className='api-dot'; txt.textContent='未配置'; }
+}
+function renderVoiceButtons(){
+  const wrap = document.getElementById('voiceSelect');
+  if(!wrap) return;
+  wrap.innerHTML = '';
+  Object.entries(VOICES).forEach(([name, label])=>{
+    const d = document.createElement('div');
+    d.className = 'voice-opt' + (name===selectedVoiceName?' active':'');
+    d.textContent = label;
+    d.onclick = ()=>{ selectedVoiceName=name; audioCache={}; try{localStorage.setItem('eng3_voice',name);}catch(e){} renderVoiceButtons(); };
+    wrap.appendChild(d);
+  });
+}
+function setVoice(el){}
+
+// 生成阿里云 TTS 签名（HMAC-SHA256）
+async function signAliTTS(text){
+  const aliKeys = getAliKeys();
+  const date = new Date().toISOString().replace(/\.\d{3}Z$/, 'Z');
+  const nonce = Math.random().toString(36).slice(2);
+  const params = {
+    AccessKeyId: aliKeys.akId,
+    Action: 'RunSpeechSynthesize',
+    Format: 'JSON',
+    SignatureMethod: 'HMAC-SHA256',
+    SignatureNonce: nonce,
+    SignatureVersion: '1.0',
+    Text: text,
+    Timestamp: date,
+    Version: '2019-08-16',
+    Voice: selectedVoiceName,
+    Format2: 'mp3',
+    SampleRate: '16000',
+    SpeechRate: '-200',
+  };
+  const sorted = Object.keys(params).sort().map(k=>
+    encodeURIComponent(k)+'='+encodeURIComponent(params[k])
+  ).join('&');
+  const strToSign = 'GET&%2F&'+encodeURIComponent(sorted);
+  const key = await crypto.subtle.importKey(
+    'raw', new TextEncoder().encode(aliKeys.akSecret+'&'),
+    {name:'HMAC',hash:'SHA-256'}, false, ['sign']
+  );
+  const sig = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(strToSign));
+  const b64 = btoa(String.fromCharCode(...new Uint8Array(sig)));
+  params.Signature = b64;
+  return 'https://nls-gateway-cn-shanghai.aliyuncs.com/rest/v1/tts?' +
+    Object.keys(params).map(k=>encodeURIComponent(k)+'='+encodeURIComponent(params[k])).join('&');
+}
+
+async function speak(){
+  if(curIdx>=3) return;
+  const line = todaySet[curIdx].lines[curIdx];
+  const text = line.en;
+  const cacheKey = selectedVoiceName+'|'+text;
+  const btn = document.getElementById('listenBtn');
+  const btnSpan = btn.querySelector('span');
+
+  if(audioCache[cacheKey]){ playBlob(audioCache[cacheKey]); return; }
+
+  btn.classList.add('loading');
+  if(btnSpan) btnSpan.textContent = '加载中…';
+
+  const aliKeys = getAliKeys();
+  if(!aliKeys.akId || !aliKeys.akSecret || !aliKeys.appkey){
+    showListenHint('请先点击「API 设置」配置阿里云 Key');
+    fallbackSpeak(text);
+    btn.classList.remove('loading');
+    if(btnSpan) btnSpan.textContent = '听标准发音';
+    return;
+  }
+  try{
+    const url = await signAliTTS(text);
+    const resp = await fetch(url);
+    if(!resp.ok) throw new Error('HTTP '+resp.status);
+    const contentType = resp.headers.get('content-type')||'';
+    if(contentType.includes('application/json')){
+      const err = await resp.json();
+      throw new Error(err.Message || '阿里云TTS错误');
+    }
+    const blob = await resp.blob();
+    audioCache[cacheKey] = blob;
+    playBlob(blob);
+  }catch(e){
+    console.error('阿里云 TTS error:', e);
+    showListenHint('⚠️ '+e.message+'，改用系统发音');
+    fallbackSpeak(text);
+  }finally{
+    btn.classList.remove('loading');
+    if(btnSpan) btnSpan.textContent = '听标准发音';
+  }
+}
+function playBlob(blob){
+  const url = URL.createObjectURL(blob);
+  const audio = new Audio(url);
+  audio.onended = ()=>URL.revokeObjectURL(url);
+  audio.play().catch(e=>console.error('play error',e));
+}
+
+function showListenHint(msg){
+  const hint = document.getElementById('recHint');
+  const prev = hint.textContent;
+  hint.textContent = msg;
+  setTimeout(()=>{ if(hint.textContent===msg) hint.textContent=prev; }, 3000);
+}
+
+function fallbackSpeak(text){
+  if(!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang='en-US'; u.rate=0.82; u.pitch=1;
+  const voices = window.speechSynthesis.getVoices();
+  const v = voices.find(x=>x.lang.startsWith('en')&&(x.name.includes('Samantha')||x.name.includes('Female')))||voices.find(x=>x.lang.startsWith('en'));
+  if(v) u.voice=v;
+  window.speechSynthesis.speak(u);
+}
+
+function setupSR(){
+  const SR = window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){ document.getElementById('noSR').style.display='block'; document.getElementById('recBtn').disabled=true; return false; }
+  recognition = new SR();
+  recognition.lang='en-US'; recognition.continuous=false; recognition.interimResults=false;
+  recognition.onresult = e => { const t=e.results[0][0].transcript; const c=e.results[0][0].confidence; stopRecUI(); processResult(t,c); };
+  recognition.onerror = e => { stopRecUI(); if(e.error==='no-speech') document.getElementById('recHint').textContent='没有检测到声音，请再试'; else if(e.error==='not-allowed') document.getElementById('recHint').textContent='请在浏览器设置中允许麦克风权限'; };
+  recognition.onend = ()=>stopRecUI();
+  return true;
+}
+
+function toggleRec(){
+  if(isRec){ recognition&&recognition.stop(); stopRecUI(); }
+  else{ if(!recognition&&!setupSR()) return; try{ recognition.start(); startRecUI(); }catch(e){ recognition=null; if(!setupSR()) return; recognition.start(); startRecUI(); } }
+}
+
+function startRecUI(){
+  isRec=true;
+  document.getElementById('recBtn').classList.add('on');
+  document.getElementById('micIco').innerHTML='<rect x="3" y="3" width="18" height="18" rx="2"/>';
+  document.getElementById('recTxt').textContent='点击停止';
+  document.getElementById('recHint').textContent='正在聆听… 请说出例句';
+  const wf=document.getElementById('wave'); wf.innerHTML='';
+  for(let i=0;i<18;i++){ const b=document.createElement('div'); b.className='wbar on'; b.style.height='8px'; wf.appendChild(b); }
+  waveTimer=setInterval(()=>{ wf.querySelectorAll('.wbar').forEach(b=>{ b.style.height=Math.floor(Math.random()*32+6)+'px'; }); },110);
+}
+
+function stopRecUI(){
+  isRec=false; clearInterval(waveTimer);
+  document.getElementById('recBtn').classList.remove('on');
+  document.getElementById('micIco').innerHTML='<path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4M8 23h8"/>';
+  document.getElementById('recTxt').textContent='开始录音';
+  document.getElementById('wave').innerHTML='';
+}
+
+function scoreIt(transcript, target, conf){
+  const t = transcript.toLowerCase().replace(/[!?.,'']/g,'').trim();
+  const ref = target.toLowerCase().replace(/[!?.,'']/g,'').trim();
+  const rw = ref.split(/\s+/);
+  let matched=0; rw.forEach(w=>{ if(t.includes(w)) matched++; });
+  const cmp = Math.round((matched/rw.length)*100);
+  let acc = Math.round((conf||0.72)*100);
+  if(t===ref) acc=97;
+  else if(ref.includes(t)||t.includes(ref)) acc=Math.max(acc,89);
+  acc = Math.min(acc,98);
+  const fluBase = cmp>80?84:cmp>60?70:52;
+  const flu = Math.min(Math.round(fluBase+Math.random()*10),97);
+  const overall = Math.round(acc*.45+cmp*.35+flu*.2);
+  return {acc,cmp,flu,overall};
+}
+
+function barColor(v){ return v>=85?'#34a853':v>=65?'#f5a623':'#ea4335'; }
+
+function processResult(transcript, conf){
+  const line = todaySet[curIdx].lines[curIdx];
+  const sc = scoreIt(transcript, line.en, conf);
+  const pass = sc.overall>=85;
+  document.getElementById('heardTxt').textContent='"'+transcript+'"';
+  const sn=document.getElementById('scoreNum');
+  sn.textContent=sc.overall;
+  sn.className='score-num '+(sc.overall>=85?'pass':sc.overall>=65?'ok':'low');
+  [['bAcc','vAcc',sc.acc],['bCmp','vCmp',sc.cmp],['bFlu','vFlu',sc.flu]].forEach(([bid,vid,v])=>{
+    const bf=document.getElementById(bid); bf.style.width=v+'%'; bf.style.background=barColor(v);
+    document.getElementById(vid).textContent=v;
+  });
+  const fbEl=document.getElementById('fbMsg');
+  if(pass){ fbEl.textContent=randOf(PASS_FEEDBACKS); fbEl.className='fb pass-fb'; }
+  else if(sc.overall>=65){ fbEl.textContent=randOf(OK_FEEDBACKS); fbEl.className='fb ok-fb'; }
+  else{ fbEl.textContent=randOf(BAD_FEEDBACKS); fbEl.className='fb bad-fb'; }
+  document.getElementById('resCard').classList.add('show');
+  if(pass){ passedArr[curIdx]=true; save(); }
+  document.getElementById('navRow').style.display='flex';
+  const nb=document.getElementById('nextBtn');
+  if(pass){
+    if(curIdx>=2) nb.textContent='查看结果';
+    else nb.textContent='下一句 →';
+  } else {
+    nb.textContent=curIdx>=2?'完成练习':'继续下一句';
+  }
+  document.getElementById('recHint').textContent = pass ? '✓ 通过！可进入下一句' : '未达到85分，建议再试一次';
+}
+
+function retry(){
+  document.getElementById('resCard').classList.remove('show');
+  document.getElementById('navRow').style.display='none';
+  document.getElementById('recHint').textContent='点击开始录音，再次点击停止';
+}
+
+function nextStep(){
+  if(curIdx<2){ curIdx++; save(); render(); }
+  else{ checkAllDone(); }
+}
+
+function checkAllDone(){
+  const allPassed = passedArr.every(Boolean);
+  if(allPassed){
+    dayDone=true; bumpStreak(); save();
+    document.getElementById('doneTxt').textContent='三句全部达到85分，今日打卡成功！连续练习 '+getStreak()+' 天。';
+  } else {
+    const failIdx = passedArr.findIndex(v=>!v);
+    curIdx=failIdx; save();
+    document.getElementById('recHint').textContent='还有未过关的句子，继续加油！';
+  }
+  render();
+}
+
+async function startNewDay(){
+  pickSet(); passedArr=[false,false,false]; curIdx=0; dayDone=false; save();
+  showLoadingBanner(true);
+  render();
+  const ok = await fetchAISet();
+  showLoadingBanner(false);
+  if(ok) render();
+}
+
+window.speechSynthesis && window.speechSynthesis.getVoices();
+loadApiKey();
+load();
+render();
+</script>
+</body>
+</html>
